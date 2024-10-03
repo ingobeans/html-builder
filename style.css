@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+}
+
+#iframe {
+  min-width: 50%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  flex-grow: 1;
+}
+
+#text {
+  float: left;
+  width: 50%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background-color: #282a36;
+  color: white;
+}
+
+.CodeMirror {
+  height: 100% !important;
+}
