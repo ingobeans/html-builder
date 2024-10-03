@@ -3,12 +3,20 @@ let iframe = document.getElementById("iframe");
 let textDiv = document.getElementById("text");
 let code = document.getElementById("code");
 code.value = `<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <title>booger</title>
   </head>
+  <style>
+    p {
+      margin: 0;
+      font-size: 26px
+    }
+  </style>
   <body>
     <p>hello!</p>
+    <p>press ctrl+s to update preview window's html</p>
+    <p>press ctrl+b to toggle code visibility</p>
   </body>
 </html>`;
 
@@ -27,7 +35,6 @@ function keydown(event) {
   if (event.ctrlKey || event.metaKey) {
     if (event.key == "s") {
       event.preventDefault();
-      console.log("blocked ctrl+s");
 
       iframe.contentDocument.open();
       iframe.contentDocument.write(editor.getValue());
