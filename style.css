@@ -2,6 +2,20 @@ body {
   margin: 0;
   height: 100vh;
   display: flex;
+  flex-direction: column;
+}
+
+#main {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+#navigation {
+  min-height: 2em;
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
 }
 
 #iframe {
@@ -22,6 +36,14 @@ body {
   color: white;
   display: flex;
   flex-direction: column;
+}
+
+button {
+  border: none;
+  flex-grow: 1;
+  background-color: #ff79c6;
+  color: inherit;
+  font-size: inherit;
 }
 
 .CodeMirror {

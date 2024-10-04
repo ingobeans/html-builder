@@ -58,6 +58,35 @@ let cssEditor = new EditorTab(
   "style.css"
 );
 
+function toggleButton(button, state, editor) {
+  if (state) {
+    button.style.backgroundColor = "#ff79c6";
+    editor.editor.display.wrapper.style.display = "";
+  } else {
+    button.style.backgroundColor = "inherit";
+    editor.editor.display.wrapper.style.display = "none";
+  }
+}
+
+htmlButtonToggled = true;
+function toggleHtml() {
+  let button = document.getElementById("htmlButton");
+  htmlButtonToggled = !htmlButtonToggled;
+  toggleButton(button, htmlButtonToggled, htmlEditor);
+}
+jsButtonToggled = true;
+function toggleJs() {
+  let button = document.getElementById("jsButton");
+  jsButtonToggled = !jsButtonToggled;
+  toggleButton(button, jsButtonToggled, jsEditor);
+}
+cssButtonToggled = true;
+function toggleCss() {
+  let button = document.getElementById("cssButton");
+  cssButtonToggled = !cssButtonToggled;
+  toggleButton(button, cssButtonToggled, cssEditor);
+}
+
 function updateIframe() {
   let value = htmlEditor.editor.getValue();
   value = value.replaceAll(
