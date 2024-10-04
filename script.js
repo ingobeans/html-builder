@@ -109,6 +109,25 @@ function updateIframe() {
   iframe.contentDocument.write(value);
   iframe.contentDocument.close();
   iframe.contentDocument.documentElement.addEventListener("keydown", keydown);
+
+  let titleElement =
+    iframe.contentDocument.documentElement.querySelector("title");
+
+  if (titleElement) {
+    document.title = "html builder - " + titleElement.innerText;
+
+    // listen to changes to the title
+    new MutationObserver(function (mutations) {
+      document.title = "html builder - " + mutations[0].target.innerText;
+      console.log(mutations[0].target.innerText);
+    }).observe(titleElement, {
+      subtree: true,
+      characterData: true,
+      childList: true,
+    });
+  } else {
+    document.title = "html builder";
+  }
 }
 
 updateIframe();
