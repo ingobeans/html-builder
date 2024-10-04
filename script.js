@@ -91,7 +91,7 @@ function keydown(event) {
       }
     } else if (event.key == "b") {
       event.preventDefault();
-      textDiv.hidden = !textDiv.hidden;
+      textDiv.style.display = textDiv.style.display == "none" ? "flex" : "none";
     } else if (event.key == "q") {
       event.preventDefault();
       editorTabs.forEach((tab) => {
