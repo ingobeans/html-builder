@@ -46,6 +46,34 @@ class EditorTab {
   }
 }
 
+function replaceImports(html) {
+  // finds css imports
+  const linkRegex =
+    /<link\s+rel=["']stylesheet["']\s+href=["']([^"']+)["']\s*\/?>/gi;
+  // finds js imports
+  const scriptRegex = /<script\s+src=["']([^"']+)["']\s*><\/script>/gi;
+
+  let modifiedHtml = html.replace(linkRegex, (match, fileName) => {
+    const file = fileName.split("/").pop();
+    let localFile = localStorage.getItem(file);
+    if (localFile !== null) {
+      return "<style>" + localFile + "</style>";
+    }
+    return match;
+  });
+
+  modifiedHtml = modifiedHtml.replace(scriptRegex, (match, fileName) => {
+    const file = fileName.split("/").pop();
+    let localFile = localStorage.getItem(file);
+    if (localFile !== null) {
+      return "<script>" + localFile + "</script>";
+    }
+    return match;
+  });
+
+  return modifiedHtml;
+}
+
 let htmlEditor = new EditorTab(
   `<!DOCTYPE html>
 <html>
@@ -86,14 +114,7 @@ function toggleButton(button, state, editor) {
 
 function updateIframe() {
   let value = htmlEditor.editor.getValue();
-  value = value.replaceAll(
-    `<script src="script.js"></script>`,
-    `<script>${localStorage.getItem("script.js")}</script>`
-  );
-  value = value.replaceAll(
-    `<link rel="stylesheet" href="style.css" />`,
-    `<style>${localStorage.getItem("style.css")}</style>`
-  );
+  value = replaceImports(value);
   iframe.contentDocument.open();
   iframe.contentDocument.write(value);
   iframe.contentDocument.close();
