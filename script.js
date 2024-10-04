@@ -1,5 +1,6 @@
-let iframe = document.getElementById("iframe");
 let textDiv = document.getElementById("text");
+let iframeContainer = document.getElementById("iframeContainer");
+let iframe = iframeContainer.children[0];
 let navigationDiv = document.getElementById("navigation");
 let editorTabs = [];
 
@@ -105,6 +106,9 @@ let cssEditor = new EditorTab(
 function updateIframe() {
   let value = htmlEditor.editor.getValue();
   value = replaceImports(value);
+  iframeContainer.innerHTML = "";
+  iframe = document.createElement("iframe");
+  iframeContainer.appendChild(iframe);
   iframe.contentDocument.open();
   iframe.contentDocument.write(value);
   iframe.contentDocument.close();

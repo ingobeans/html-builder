@@ -18,16 +18,22 @@ body {
   justify-content: space-between;
 }
 
-#iframe {
-  min-width: 50%;
-  height: 100%;
+#iframeContainer {
+  flex-grow: 1;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+iframe {
   padding: 0;
   border: none;
-  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  margin: 0;
 }
 
 #text {
-  float: left;
   width: 50%;
   height: 100%;
   padding: 0;
