@@ -10,12 +10,32 @@ class EditorTab {
     this.language = language;
     this.filename = filename;
 
-    this.buttonPressed = true;
+    // get default/saved code
+    let value = this.defaultCode;
+
+    let storedCode = localStorage.getItem(filename);
+    if (storedCode === null) {
+      localStorage.setItem(this.filename, this.defaultCode);
+    } else {
+      value = storedCode;
+    }
+
+    // create text box
+    this.editor = CodeMirror(textDiv, {
+      value: value,
+      mode: language,
+      lineNumbers: true,
+      theme: "dracula",
+    });
+
+    // create button
     this.button = document.createElement("button");
     this.button.innerText = filename;
 
-    this.button.onclick = function () {
+    // update button color and state
+    function toggleButton() {
       this.buttonPressed = !this.buttonPressed;
+      localStorage.setItem(filename + "button", this.buttonPressed);
       if (this.buttonPressed) {
         this.button.style.backgroundColor = "";
         this.editor.display.wrapper.style.display = "";
@@ -23,23 +43,22 @@ class EditorTab {
         this.button.style.backgroundColor = "inherit";
         this.editor.display.wrapper.style.display = "none";
       }
-    }.bind(this);
+    }
+
+    // load saved button state
+    this.buttonPressed = true;
+    let storedButtonValue = localStorage.getItem(filename + "button");
+    if (storedButtonValue === null) {
+      localStorage.setItem(filename + "button", true);
+    } else {
+      this.buttonPressed = storedButtonValue != "true";
+      toggleButton.bind(this)();
+    }
+
+    this.button.onclick = toggleButton.bind(this);
     navigationDiv.appendChild(this.button);
 
-    let value = this.defaultCode;
-
-    let storedValue = localStorage.getItem(filename);
-    if (storedValue === null) {
-      localStorage.setItem(this.filename, this.defaultCode);
-    } else {
-      value = storedValue;
-    }
-    this.editor = CodeMirror(textDiv, {
-      value: value,
-      mode: language,
-      lineNumbers: true,
-      theme: "dracula",
-    });
+    // add this to editor tabs register
     editorTabs.push(this);
   }
   save() {
