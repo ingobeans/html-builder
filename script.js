@@ -11,6 +11,7 @@ class EditorTab {
     let storedValue = localStorage.getItem(filename);
     if (storedValue === null) {
       this.element.value = this.defaultCode;
+      localStorage.setItem(this.filename, this.defaultCode);
     } else {
       this.element.value = storedValue;
     }
