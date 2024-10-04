@@ -108,6 +108,7 @@ function updateIframe() {
   iframe.contentDocument.open();
   iframe.contentDocument.write(value);
   iframe.contentDocument.close();
+  iframe.contentDocument.documentElement.addEventListener("keydown", keydown);
 }
 
 updateIframe();
@@ -120,12 +121,6 @@ function keydown(event) {
         tab.save();
       });
       updateIframe();
-      if (
-        iframe.contentDocument.children[0] !== undefined &&
-        iframe.contentDocument.children[0].tagName == "HTML"
-      ) {
-        iframe.contentDocument.children[0].addEventListener("keydown", keydown);
-      }
     } else if (event.key == "b") {
       event.preventDefault();
       textDiv.style.display = textDiv.style.display == "none" ? "flex" : "none";
