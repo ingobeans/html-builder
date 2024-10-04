@@ -1,22 +1,40 @@
 let iframe = document.getElementById("iframe");
 let textDiv = document.getElementById("text");
+let navigationDiv = document.getElementById("navigation");
 let editorTabs = [];
 
 class EditorTab {
-  constructor(elementId, defaultCode, language, filename) {
-    this.element = document.getElementById(elementId);
+  constructor(defaultCode, language, filename) {
     this.defaultCode = defaultCode;
     this.language = language;
     this.filename = filename;
+
+    this.buttonPressed = true;
+    this.button = document.createElement("button");
+    this.button.innerText = filename;
+
+    this.button.onclick = function () {
+      this.buttonPressed = !this.buttonPressed;
+      if (this.buttonPressed) {
+        this.button.style.backgroundColor = "#ff79c6";
+        this.editor.display.wrapper.style.display = "";
+      } else {
+        this.button.style.backgroundColor = "inherit";
+        this.editor.display.wrapper.style.display = "none";
+      }
+    }.bind(this);
+    navigationDiv.appendChild(this.button);
+
+    let value = this.defaultCode;
+
     let storedValue = localStorage.getItem(filename);
     if (storedValue === null) {
-      this.element.value = this.defaultCode;
       localStorage.setItem(this.filename, this.defaultCode);
     } else {
-      this.element.value = storedValue;
+      value = storedValue;
     }
-    this.editor = CodeMirror.fromTextArea(this.element, {
-      value: this.element.value,
+    this.editor = CodeMirror(textDiv, {
+      value: value,
       mode: language,
       lineNumbers: true,
       theme: "dracula",
@@ -29,7 +47,6 @@ class EditorTab {
 }
 
 let htmlEditor = new EditorTab(
-  "htmlCode",
   `<!DOCTYPE html>
 <html>
   <head>
@@ -47,9 +64,8 @@ let htmlEditor = new EditorTab(
   "htmlmixed",
   "index.html"
 );
-let jsEditor = new EditorTab("jsCode", ``, "javascript", "script.js");
+let jsEditor = new EditorTab(``, "javascript", "script.js");
 let cssEditor = new EditorTab(
-  "cssCode",
   `p {
   margin: 0;
   font-size: 26px;
@@ -66,25 +82,6 @@ function toggleButton(button, state, editor) {
     button.style.backgroundColor = "inherit";
     editor.editor.display.wrapper.style.display = "none";
   }
-}
-
-htmlButtonToggled = true;
-function toggleHtml() {
-  let button = document.getElementById("htmlButton");
-  htmlButtonToggled = !htmlButtonToggled;
-  toggleButton(button, htmlButtonToggled, htmlEditor);
-}
-jsButtonToggled = true;
-function toggleJs() {
-  let button = document.getElementById("jsButton");
-  jsButtonToggled = !jsButtonToggled;
-  toggleButton(button, jsButtonToggled, jsEditor);
-}
-cssButtonToggled = true;
-function toggleCss() {
-  let button = document.getElementById("cssButton");
-  cssButtonToggled = !cssButtonToggled;
-  toggleButton(button, cssButtonToggled, cssEditor);
 }
 
 function updateIframe() {

@@ -44,6 +44,11 @@ button {
   background-color: #ff79c6;
   color: inherit;
   font-size: inherit;
+  border-right: 1px solid black;
+}
+
+button:last-child {
+  border-right: none;
 }
 
 .CodeMirror {
