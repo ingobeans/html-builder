@@ -20,8 +20,11 @@ body {
   border: none;
   background-color: #282a36;
   color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 .CodeMirror {
-  height: 100% !important;
+  flex-grow: 1;
+  border-bottom: 1px solid black !important;
 }

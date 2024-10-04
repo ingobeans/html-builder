@@ -1,55 +1,87 @@
 let iframe = document.getElementById("iframe");
-
 let textDiv = document.getElementById("text");
-let code = document.getElementById("code");
+let editorTabs = [];
 
-let defaultCode = `<!DOCTYPE html>
+class EditorTab {
+  constructor(elementId, defaultCode, language, filename) {
+    this.element = document.getElementById(elementId);
+    this.defaultCode = defaultCode;
+    this.language = language;
+    this.filename = filename;
+    let storedValue = localStorage.getItem(filename);
+    if (storedValue === null) {
+      this.element.value = this.defaultCode;
+    } else {
+      this.element.value = storedValue;
+    }
+    this.editor = CodeMirror.fromTextArea(this.element, {
+      value: this.element.value,
+      mode: language,
+      lineNumbers: true,
+      theme: "dracula",
+    });
+    editorTabs.push(this);
+  }
+  save() {
+    localStorage.setItem(this.filename, this.editor.getValue());
+  }
+}
+
+let htmlEditor = new EditorTab(
+  "htmlCode",
+  `<!DOCTYPE html>
 <html>
   <head>
     <title>booger</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
-  <style>
-    p {
-      margin: 0;
-      font-size: 26px;
-    }
-  </style>
   <body>
     <p>hello!</p>
     <p>press ctrl+s to save code and update preview window's html</p>
     <p>press ctrl+b to toggle code visibility</p>
     <p>press ctrl+q to reset/clear code</p>
+    <script src="script.js"></script>
   </body>
-</html>`;
-let savedCode = localStorage.getItem("code");
+</html>`,
+  "htmlmixed",
+  "index.html"
+);
+let jsEditor = new EditorTab("jsCode", ``, "javascript", "script.js");
+let cssEditor = new EditorTab(
+  "cssCode",
+  `p {
+  margin: 0;
+  font-size: 26px;
+}`,
+  "css",
+  "style.css"
+);
 
-if (savedCode === null) {
-  code.value = defaultCode;
-  localStorage.setItem("code", code.value);
-} else {
-  code.value = savedCode;
+function updateIframe() {
+  let value = htmlEditor.editor.getValue();
+  value = value.replaceAll(
+    `<script src="script.js"></script>`,
+    `<script>${localStorage.getItem("script.js")}</script>`
+  );
+  value = value.replaceAll(
+    `<link rel="stylesheet" href="style.css" />`,
+    `<style>${localStorage.getItem("style.css")}</style>`
+  );
+  iframe.contentDocument.open();
+  iframe.contentDocument.write(value);
+  iframe.contentDocument.close();
 }
 
-var editor = CodeMirror.fromTextArea(code, {
-  value: code.value,
-  mode: "htmlmixed",
-  lineNumbers: true,
-  theme: "dracula",
-});
-
-iframe.contentDocument.open();
-iframe.contentDocument.write(editor.getValue());
-iframe.contentDocument.close();
+updateIframe();
 
 function keydown(event) {
   if (event.ctrlKey || event.metaKey) {
     if (event.key == "s") {
       event.preventDefault();
-      let value = editor.getValue();
-      localStorage.setItem("code", value);
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(value);
-      iframe.contentDocument.close();
+      editorTabs.forEach((tab) => {
+        tab.save();
+      });
+      updateIframe();
       if (
         iframe.contentDocument.children[0] !== undefined &&
         iframe.contentDocument.children[0].tagName == "HTML"
@@ -61,7 +93,9 @@ function keydown(event) {
       textDiv.hidden = !textDiv.hidden;
     } else if (event.key == "q") {
       event.preventDefault();
-      editor.setValue(defaultCode);
+      editorTabs.forEach((tab) => {
+        tab.editor.setValue(tab.defaultCode);
+      });
     }
   }
 }
