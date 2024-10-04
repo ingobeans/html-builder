@@ -41,7 +41,7 @@ body {
 button {
   border: none;
   flex-grow: 1;
-  background-color: #ff79c6;
+  background-color: #3f4766;
   color: inherit;
   font-size: inherit;
   border-right: 1px solid black;
@@ -54,4 +54,7 @@ button:last-child {
 .CodeMirror {
   flex-grow: 1;
   border-bottom: 1px solid black !important;
+}
+.CodeMirror:last-child {
+  border-bottom: none !important;
 }

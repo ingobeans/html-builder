@@ -16,7 +16,7 @@ class EditorTab {
     this.button.onclick = function () {
       this.buttonPressed = !this.buttonPressed;
       if (this.buttonPressed) {
-        this.button.style.backgroundColor = "#ff79c6";
+        this.button.style.backgroundColor = "";
         this.editor.display.wrapper.style.display = "";
       } else {
         this.button.style.backgroundColor = "inherit";
@@ -101,16 +101,6 @@ let cssEditor = new EditorTab(
   "css",
   "style.css"
 );
-
-function toggleButton(button, state, editor) {
-  if (state) {
-    button.style.backgroundColor = "#ff79c6";
-    editor.editor.display.wrapper.style.display = "";
-  } else {
-    button.style.backgroundColor = "inherit";
-    editor.editor.display.wrapper.style.display = "none";
-  }
-}
 
 function updateIframe() {
   let value = htmlEditor.editor.getValue();
